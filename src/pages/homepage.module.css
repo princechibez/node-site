@@ -20,6 +20,7 @@
     justify-content: space-around;
     height: 30px;
     border-bottom: 1px solid #000000;
+    padding: 5px;
 }
 .functionality_controllers div:nth-child(1) input {
     outline: none;
