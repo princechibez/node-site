@@ -29,7 +29,7 @@ const Homepage = (props) => {
           //   try {
       setLoading(true); //Set loader before fetching data
       axios
-        .get("https://randomuser.me/api/?results=10")
+        .get("https://randomuser.me/api/?results=50")
         .then((res) => {
           setLoading(false);
           setfilteredUsers(res.data.results);
