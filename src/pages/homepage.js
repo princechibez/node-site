@@ -15,17 +15,18 @@ const cardLazyLoader = lazyloader(() => {
   return import("../components/card");
 });
 
-const Homepage = () => {
+const Homepage = (props) => {
   const [filterdUsers, setfilteredUsers] = useState([]);
   const colorShuffle = ["#E8CDAD", "#E1D3C7", "#A7B8A8"];
+  const [searchMessage, setSearchMessage] = useState(null);
   const [users, setUsers] = useState(null);
-  const [sortedUsers, setSortedUsers] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState("list");
 
   useLayoutEffect(() => {
-    const fetchData = () => {
-      //   try {
+      const fetchData = () => {
+          //   try {
       setLoading(true); //Set loader before fetching data
       axios
         .get("https://randomuser.me/api/?results=10")
@@ -36,13 +37,14 @@ const Homepage = () => {
         })
         //   }
         .catch((err) => {
-          console.log(err);
+          setLoading(false);
+          setError(err);
         });
     };
     fetchData();
-  }, []);
+}, []);
 
-  console.log(filterdUsers);
+
   //   function for randomly choosing colors
   const randomColorPicker = () => {
     const randomColor = Math.floor(Math.random() * colorShuffle.length);
@@ -61,18 +63,26 @@ const Homepage = () => {
 
   //   Search by name filter function
   const searchByName = (e) => {
+    if (!users) return;
     const query = e.target.value;
     // Create copy of item list
-    let updatedList = [...filterdUsers];
+    let newList = [...filterdUsers];
+    let updatedList = [];
     // Include all elements which includes the search query
-    updatedList = updatedList.filter((item) => {
+    updatedList = newList.filter((item) => {
+      setSearchMessage(null);
       const name = item.name.first + " " + item.name.last;
-    //   console.log(item.name.first);
       return name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
-    //   console.log(updatedList)
+    if (updatedList.length === 0) {
+      setSearchMessage("No user matched your search");
+    }
+    if (query === "") {
+      setSearchMessage(null);
+    }
+
     // Trigger render with updated values
-      setUsers(updatedList);
+    setUsers(updatedList);
   };
 
   return (
@@ -83,7 +93,11 @@ const Homepage = () => {
         <div className={classes.functionality_controllers}>
           <div>
             <img src={search} height={15} width={15} />
-            <input type="text" onKeyUp={searchByName} placeholder="Search for users" />
+            <input
+              type="text"
+              onKeyUp={searchByName}
+              placeholder="Search for users"
+            />
           </div>
           <div>
             <img src={sorter} height={30} width={30} />
@@ -102,10 +116,11 @@ const Homepage = () => {
         {loading && <Spinner />}
         {users &&
           !loading &&
-          users.map((e) => {
+          users.map((e, i) => {
             return (
               // Load card lazily
               <Card
+                key={i}
                 mode={viewMode}
                 color={randomColorPicker()}
                 name={e.name ? e.name.first + " " + e.name.last : ""}
@@ -114,6 +129,12 @@ const Homepage = () => {
               />
             );
           })}
+        {searchMessage && (
+          <h3 style={{ color: "#292929", textAlign: "center", padding: "20px" }}>
+            {searchMessage}
+          </h3>
+        )}
+        {/* {!loading && !users && <h3>No users</h3>} */}
       </main>
     </section>
   );

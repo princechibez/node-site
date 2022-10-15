@@ -219,10 +219,12 @@ li {
         flex: 1;
     }
     .list_name_section h3 {
+        text-overflow: ellipsis;
+        white-space: nowrap;
         width: 90%;
         font-size: 14px;
         color: #292929;
-        font-weight: 700;
+        font-weight: 600;
     }
     .list_name_section h5 {
         font-size: 10px;

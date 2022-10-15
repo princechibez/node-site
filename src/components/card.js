@@ -19,6 +19,12 @@ const Card = (props) => {
     const listBackCover = {
         backgroundColor: props.color
     }
+
+    // auto format long names to fit box in list view
+    // let newFormattedName;
+    // if(props.name.length > 8) {
+    //     newFormattedName = props.name.split(" ")[0] + "...";
+    // }
   return (
     props.mode == 'grid' ? <li className={classes.card_body}>
         <section className={classes.background_cover} style={backCover}>

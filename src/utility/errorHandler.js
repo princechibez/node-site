@@ -14,7 +14,7 @@ const ErrorHandler = (WrappedComponent, axios) => {
               return req;
           });
           this.resInterceptor = axios.interceptors.response.use(res => res, error => {
-              this.setState({error: error.response});
+            this.setState({error: error.message});
           });
       }
 
@@ -31,11 +31,11 @@ const ErrorHandler = (WrappedComponent, axios) => {
           return (
               <>
                   { this.state.error ? <Modal
-                  clicked={this.errorConfirmedHandler}
+                //   clicked={this.errorConfirmedHandler}
                   show={this.state.error}>
-                      {this.state.error ? this.state.error.message : null}
+                      {this.state.error ? `${this.state.error}... reload page!` : null}
                   </Modal> : null }
-                  <WrappedComponent {...this.props}  />
+                  <WrappedComponent {...this.props} />
               </>
           );
       }
